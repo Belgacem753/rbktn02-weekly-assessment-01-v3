@@ -34,4 +34,43 @@ var Tree = function(value) {
 };
 
 
+Tree.prototype.map = function (func){
+  var result = new Tree()
+  if (this.value) {
+    result.addChild(func(this.value))
+     
+  }
+  for (var i = 0; i < this.children.length; i++) {
+    var child = this.children[i];
+    result.addChild(child.map(child.value));
+  }
+};
+
+Tree.prototype.addChild = function(child) {
+  if (!child || !(child instanceof Tree)) {
+    child = new Tree(child);
+  }
+
+  if (!this.isDescendant(child)) {
+    this.children.push(child);
+  } else {
+    throw new Error('That child is already a child of this tree');
+  }
+  return child;
+};
+
+Tree.prototype.isDescendant = function(child) {
+  if (this.children.indexOf(child) !== -1) {
+    return true;
+  } else {
+    for (var i = 0; i < this.children.length; i++) {
+      if (this.children[i].isDescendant(child)) {
+        return true;
+      }
+    }
+    return false;
+  }
+};
+
+
 
